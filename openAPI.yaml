@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: Stock Data transactions Query Agent
+  description: Stock Data query services
+  version: 0.1.0
+  x-ibm-application-icon: "<svg width=\"48px\" height=\"48px\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path opacity=\"0.500488\" d=\"M6.72 18.12q2.87 0.12 5.718 0.12c2.848 0 5.094 -0.12 5.682 -0.12\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path opacity=\"0.500488\" d=\"M18.1 16.8c0.414 0.094 1.353 1.044 1.603 1.144S18.877 19.179 18.383 19.38\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path opacity=\"0.500488\" d=\"M5.46 17.64q0.06 -2.87 0.06 -5.718c0 -2.848 -0.06 -5.094 -0.06 -5.682\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path opacity=\"0.500488\" d=\"M4.2 6.26c0.094 -0.414 1.044 -1.353 1.144 -1.603 0.099 -0.25 1.236 0.826 1.436 1.32\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"m7.38 16.14 1.44 -0.615q0.589 -1.142 0.881 -1.789T10.26 12.339l1.44 0.684 1.397 -2.468L14.58 12.731l1.507 -1.885L17.46 7.5\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
+servers:
+  - url: https://stock-data.1ojd3fmlv7hw.us-south.codeengine.appdomain.cloud
+paths:
+  /question:
+    post:
+      summary: Stock transactions queries
+      description: Query the stock data system
+      operationId: stock_data_question
+      x-ibm-application-icon: "<svg width=\"48px\" height=\"48px\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path opacity=\"0.500488\" d=\"M6.72 18.12q2.87 0.12 5.718 0.12c2.848 0 5.094 -0.12 5.682 -0.12\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path opacity=\"0.500488\" d=\"M18.1 16.8c0.414 0.094 1.353 1.044 1.603 1.144S18.877 19.179 18.383 19.38\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path opacity=\"0.500488\" d=\"M5.46 17.64q0.06 -2.87 0.06 -5.718c0 -2.848 -0.06 -5.094 -0.06 -5.682\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path opacity=\"0.500488\" d=\"M4.2 6.26c0.094 -0.414 1.044 -1.353 1.144 -1.603 0.099 -0.25 1.236 0.826 1.436 1.32\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"m7.38 16.14 1.44 -0.615q0.589 -1.142 0.881 -1.789T10.26 12.339l1.44 0.684 1.397 -2.468L14.58 12.731l1.507 -1.885L17.46 7.5\" stroke=\"#000000\" stroke-opacity=\"0.9\" stroke-width=\"0.96\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Query"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Query_Response"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+      security:
+        - HTTPBasic: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            "$ref": "#/components/schemas/ValidationError"
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Query:
+      properties:
+        question:
+          type: string
+          title: Question
+      type: object
+      required:
+      - question
+      title: Query
+    Query_Response:
+      properties:
+        result:
+          type: string
+          title: Result
+      type: object
+      required:
+        - result
+      title: Query_Response
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBasic:
+      type: http
+      scheme: basic
